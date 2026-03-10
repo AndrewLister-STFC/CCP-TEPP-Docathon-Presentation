@@ -37,11 +37,11 @@ jobs:
             - name: Upload pages artifact
               uses: actions/upload-pages-artifact@v3
               with:
-                  path: html
+                  path: Demo/html
             - name: Upload error log
               uses: actions/upload-artifact@v4
               with:
-                path: doxygen_warnings.txt
+                path: Demo/doxygen_warnings.txt
                 name: doxygen_warnings
 
     check:
