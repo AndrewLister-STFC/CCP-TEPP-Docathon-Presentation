@@ -1,0 +1,375 @@
+---
+title: "Documenting software"
+subtitle: "CCP-TEPP Docathon 2026"
+author: "Andrew Lister"
+institute: "UKRI - STFC"
+format:
+  revealjs:
+    navigation-mode: vertical
+    theme: serif
+toc: true
+toc-depth: 1
+toc-title: Outline
+
+transition: fade
+preview-links: true
+
+from: markdown+emoji
+---
+
+# Fundamentals
+
+## Disclaimers
+
+- What counts as "clear documentation" is subjective
+- This presentation will focus on C.
+  Everything also applies to Python, Fortran, C++, etc.
+
+::: {.notes}
+I'll give you my opinions, searching for information on any of these topics
+online will yield any number of other opinions that you can consult!
+:::
+
+## Importance of good docs
+
+- Understanding what the code is doing
+- Give people the confidence to use the software
+- Encourage contribution
+- Reduce user queries
+
+## Motivating example
+::: {.r-stack}
+::: {.fragment .fade-out fragment-index=1}
+```c
+double myfun(int arg1, int *arg2, int *arg3)
+{
+    double var1 = 0;
+    for(int var2 = 0; var2 < arg1; var2++)
+    {
+        int var3 = arg2[var2] - arg3[var2]
+        var1 += var3 * var3 / arg1;
+    }
+    return sqrt(var1);
+}
+```
+:::
+
+::: {.fragment .fade-in-then-out fragment-index=1}
+::: {style="font-size: 80%"}
+```c
+/// @brief Compute and return the root mean square (rms) error between
+///        an expected value and the actual value.
+/// @param n         Length of the vectors
+/// @param actual    Computed values to compare
+/// @param expected  Values expected from the computation
+/// @return          Root mean square error
+double rms_error(int n, int *actual, int *expected)
+{
+    double error = 0; // Running total of errors
+    // Add contributions from each index to error
+    for (int i = 0; i < n; i++)
+    {
+        int error_i = actual[i] - expected[i];
+        error += error_i * error_i / n;
+    }
+    return sqrt(error);
+}
+```
+:::
+:::
+:::
+
+## The Diátaxis framework
+
+![The [Diátaxis](https://diataxis.fr/) compass for documentation](https://diataxis.fr/_images/diataxis.png)
+
+## Explanation
+::: {.columns}
+::: {.column}
+### User
+- Why use the software?
+- Reporting bugs?
+:::
+::: {.column}
+### Developer
+- Project structure
+- Contributor guidelines (version control, style, testing)
+- Method/algorithm notes
+:::
+:::
+
+::: {.notes}
+The kind of documentation that makes sense when apart from the rest of the work
+:::
+
+## Tutorials
+::: {.columns}
+::: {.column}
+### User
+- User workshop
+- Lessons
+:::
+::: {.column}
+### Developer
+- Hackathon
+- How to contribute
+:::
+:::
+
+::: {.notes}
+Guided learning with emphasis on the learner doing something
+:::
+
+## How-to-guides
+::: {.columns}
+::: {.column}
+### User
+- How to use the software
+- Example programs/workflows
+- Installing the software
+:::
+::: {.column}
+### Developer
+- Submitting/Reviewing a PR
+- Running the tests
+:::
+:::
+
+::: {.notes}
+Recipes for doing a particular task
+:::
+
+## Reference
+::: {.columns}
+::: {.column}
+### User
+- Syntax
+- Function signatures and descriptions
+- API
+:::
+::: {.column}
+### Developer
+- Code comments
+- Useful variable names
+- Style guide
+:::
+:::
+
+::: {.notes}
+As descriptive as possible, not something that is generally read front to back
+:::
+
+## My suggested priority
+
+1. API/function docs (reference)
+2. Getting started - how to install, basic examples (how-to-guides)
+3. Overview - why use the software, project structure (explanation)
+4. Contributor guidelines, style guide (explanation, reference)
+5. ...
+
+::: {.notes}
+All important, if you have none of these I'd suggest this as a start
+:::
+
+# In code
+
+## "Good code documents itself"
+
+::: {style="font-size: 80%"}
+```c
+/// @brief Compute and return the root mean square (rms) error between
+///        an expected value and the actual value.
+/// @param n         Length of the vectors
+/// @param actual    Computed values to compare
+/// @param expected  Values expected from the computation
+/// @return          Root mean square error
+double rms_error(int n, int *actual, int *expected)
+{
+    double error = 0; // Running total of errors
+    // Add contributions from each index to error
+    for (int i = 0; i < n; i++)
+    {
+        int error_i = actual[i] - expected[i];
+        error += error_i * error_i / n;
+    }
+    return sqrt(error);
+}
+```
+:::
+
+::: {.notes}
+This is a common and imo often misunderstood phrase.
+
+Good code has comments where they are useful and has sensible naming to reduce the need for this where possible.
+:::
+
+## Comments
+
+::: {.r-stack}
+::: {.fragment .fade-out fragment-index=1}
+::: {style="font-size: 80%"}
+```{.c code-line-numbers="9-15"}
+/// @brief Compute and return the root mean square (rms) error between
+///        an expected value and the actual value.
+/// @param n         Length of the vectors
+/// @param actual    Computed values to compare
+/// @param expected  Values expected from the computation
+/// @return          Root mean square error
+double rms_error(int n, int *actual, int *expected)
+{
+    double error = 0; // Running total of errors
+    // Add contributions from each index to error
+    for (int i = 0; i < n; i++)
+    {
+        int error_i = actual[i] - expected[i];
+        error += error_i * error_i / n;
+    }
+    return sqrt(error);
+}
+```
+:::
+Comments should enhance understanding - explain blocks,
+describe confusing lines, justify workarounds, etc.
+:::
+::: {.fragment fragment-index=1}
+![Avoid redundant comments](https://i.redd.it/iuy9fxt300811.png)
+:::
+:::
+
+## Docstrings
+
+::: {style="font-size: 80%"}
+```{.c code-line-numbers="1-6"}
+/// @brief Compute and return the root mean square (rms) error between
+///        an expected value and the actual value.
+/// @param n         Length of the vectors
+/// @param actual    Computed values to compare
+/// @param expected  Values expected from the computation
+/// @return          Root mean square error
+double rms_error(int n, int *actual, int *expected)
+{
+    double error = 0; // Running total of errors
+    // Add contributions from each index to error
+    for (int i = 0; i < n; i++)
+    {
+        int error_i = actual[i] - expected[i];
+        error += error_i * error_i / n;
+    }
+    return sqrt(error);
+}
+```
+:::
+Docstrings give a structured way to define your interfaces
+(and can be used to auto generate full reference docs!)
+
+## VSCode extension
+![Editor extensions can automate and use this kind of docs](./images/vscode-c-ext.png)
+
+::: {.r-stack}
+Time for a live demo :pray:
+:::
+
+## VSCode extension
+
+Hopefully I remembered to show:
+
+- Auto generate docstring boilerplate
+- Show docs on hover
+- Auto format (`alt + shift + f`)
+
+## Git History
+
+Always make useful commit messages
+
+:heavy_check_mark: "Guard against negative length"
+
+:x: "Bug"
+
+<br>
+
+- Short and informative
+- Start with a verb (what does the commit do)
+- Use the history (`git blame`, `git log`)
+
+::: {.notes}
+Hard to get a full team on board with this
+
+Usually aim for a middle ground
+:::
+
+# Out of code
+
+## Tooling
+
+### [Doxygen](https://www.doxygen.nl/index.html)
+
+- Generate reference documentation from docstrings!!
+- [LAPACK docs](https://www.netlib.org/lapack/explore-html/) and [LAPACK docs source](https://github.com/Reference-LAPACK/lapack/blob/master/DOCS)
+
+::: {.fragment}
+### [Sphinx](https://www.sphinx-doc.org/en/master/)
+
+- .rst or .md files to html
+- [Python docs](https://docs.python.org/3/) and [Linux docs](https://docs.kernel.org/) (source code in link on each page)
+:::
+
+::: {.fragment}
+### [MkDocs](https://www.mkdocs.org/), [Zeniscal](https://zensical.org/), ...
+:::
+
+::: {.notes}
+Live demo!
+
+- doxygen -g
+- edit file: GENERATE_LATEX, PROJECT_NAME
+- doxygen
+- error message for undocumented function
+:::
+
+## Types of developer docs
+
+- Overview/README
+- Reference
+- Install/Set up instructions
+- Contributor guidelines
+- Style guide
+- Github/gitlab pull request checklists
+- Git history (issues, pull requests, and commits)
+- ...
+
+## Types of user docs
+
+- Overview/README
+- Reference
+- Install/Set up instructions
+- Examples
+- Tutorials
+- Discussion boards
+- ...
+
+# Deploying
+
+## [ReadTheDocs](https://about.readthedocs.com/)
+
+- Automatically build and deploy sphinx docs
+- Branches, releases, pull requests
+- [ReadTheDocs' ReadTheDocs page](https://docs.readthedocs.com/platform/stable/tutorial/index.html)
+
+## Github.io
+
+- Host any HTML content
+- Deploy with github actions
+- [CCP-TEPP website](https://github.com/CCP-TEPP/ccp-tepp.github.io)
+
+## CI/CD (in docs)
+
+- Keep **published** docs up to date
+- Check for build issues
+- Highlight missing docs
+- [Demo docs](https://github.com/AndrewLister-STFC/CCP-TEPP-Docathon-Presentation)
+
+# Take aways
+
+- Use Diátaxis to find gaps in docs
+- Write reference docs with the code and use Doxygen, Sphinx, etc.
+- Automate deployment of the docs

@@ -1,0 +1,4 @@
+project: 
+  title: "Documenting software"
+  type: website
+  output-dir: slides-html
