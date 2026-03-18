@@ -40,6 +40,12 @@ online will yield any number of other opinions that you can consult!
 ## Motivating example
 ::: {.r-stack}
 ::: {.fragment .fade-out fragment-index=1}
+$$
+\epsilon = \sqrt{\sum_i^n \frac{{\left(\hat{x}_{i} - x_{i}\right)}^2}{n}}
+$$
+:::
+
+::: {.fragment .fade-in-then-out fragment-index=1}
 ```c
 double myfun(int arg1, int *arg2, int *arg3)
 {
@@ -54,7 +60,7 @@ double myfun(int arg1, int *arg2, int *arg3)
 ```
 :::
 
-::: {.fragment .fade-in-then-out fragment-index=1}
+::: {.fragment .fade-in-then-out fragment-index=3}
 ::: {style="font-size: 80%"}
 ```c
 /// @brief Compute and return the root mean square (rms) error between
