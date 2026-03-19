@@ -48,7 +48,7 @@ jobs:
                   working-directory: Demo
                   doxyfile-path: "Doxyfile"
             - name: Move doxygen to site
-              run: cp Demo/html site/doxygen
+              run: cp -r Demo/html site/doxygen
             # Upload docs
             - name: Upload pages artifact
               uses: actions/upload-pages-artifact@v3
