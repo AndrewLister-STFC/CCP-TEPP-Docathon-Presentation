@@ -25,19 +25,32 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
+            # Setup runner for pages
             - name: Checkout
               uses: actions/checkout@v4
             - name: Setup Pages
               uses: actions/configure-pages@v5
+            # Build slides
+            - name: Setup Quarto
+              uses: quarto-dev/quarto-actions/setup@v2
+            - name: Render Slides
+              uses: quarto-dev/quarto-actions/render@v2
+              with:
+                to: site/slides
+                path: Slides/slides.qmd
+            # Build Doxygen
             - name: Run Doxygen
               uses: mattnotmitt/doxygen-action@v1.9.5
               with:
                   working-directory: Demo
                   doxyfile-path: "Doxyfile"
+            - name: Move output to site dir
+              run: mv Demo/html site/doxygen
+            # Upload docs
             - name: Upload pages artifact
               uses: actions/upload-pages-artifact@v3
               with:
-                  path: Demo/html
+                  path: site
             - name: Upload error log
               uses: actions/upload-artifact@v4
               with:
