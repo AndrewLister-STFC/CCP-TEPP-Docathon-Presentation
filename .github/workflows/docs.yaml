@@ -49,6 +49,9 @@ jobs:
                   doxyfile-path: "Doxyfile"
             - name: Move doxygen to site
               run: cp -r Demo/html site/doxygen
+            # Add top level index page
+            - name: Add index
+              run: cp index.html site/index.html
             # Upload docs
             - name: Upload pages artifact
               uses: actions/upload-pages-artifact@v3
